@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Panda.Data\Panda.Data.csproj" />
+    <ProjectReference Include="..\Panda.Models\Panda.Models.csproj" />
   </ItemGroup>
 
 </Project>
