@@ -8,7 +8,7 @@ namespace Panda.Models.BindingModels
     {
         public string Description { get; set; }
 
-        public decimal Weight { get; set; }
+        public double Weight { get; set; }
 
         public string ShippingAddress { get; set; }
 

@@ -6,6 +6,9 @@ namespace Panda.Data
 {
     public class PandaDbContext : IdentityDbContext<PandaUser, PandaUserRole, string>
     {
+        public DbSet<Package> Packages { get; set; }
+        public DbSet<Receipt> Receipts { get; set; }
+        public DbSet<StatusPackage> StatusPackage { get; set; }
 
         public PandaDbContext(DbContextOptions<PandaDbContext> options)
             : base(options)

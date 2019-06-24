@@ -45,6 +45,8 @@ namespace Panda.Web
                 .AddEntityFrameworkStores<PandaDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,14 +64,26 @@ namespace Panda.Web
                 app.UseHsts();
             }
 
-            using (var context = new PandaDbContext())
+            using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                context.Database.EnsureCreated();
-
-                if (!context.Roles.Any())
+                using (var context = serviceScope.ServiceProvider.GetRequiredService<PandaDbContext>())
                 {
-                    context.Add(new PandaUserRole { Name = "Admin" });
-                    context.Add(new PandaUserRole { Name = "User" });
+                    context.Database.EnsureCreated();
+
+                    if (!context.Roles.Any())
+                    {
+                        context.Roles.Add(new PandaUserRole { Name = "Admin", NormalizedName = "ADMIN" });
+                        context.Roles.Add(new PandaUserRole { Name = "User", NormalizedName = "USER" });
+                    }
+
+                    if (!context.StatusPackage.Any())
+                    {
+                        context.StatusPackage.Add(new StatusPackage { Name = "Pending" });
+                        context.StatusPackage.Add(new StatusPackage { Name = "Shipped" });
+                        context.StatusPackage.Add(new StatusPackage { Name = "Delivered" });
+                        context.StatusPackage.Add(new StatusPackage { Name = "Acquired" });
+                    }
+
                     context.SaveChanges();
                 }
             }

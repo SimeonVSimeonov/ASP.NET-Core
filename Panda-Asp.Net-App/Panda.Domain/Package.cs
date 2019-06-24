@@ -14,9 +14,10 @@ namespace Panda.Domain
 
         public string ShippingAddress { get; set; }
 
+        public string StatusId { get; set; }
         public StatusPackage Status{ get; set; }
 
-        public DateTime? EstimatedDeliveryDatev { get; set; }
+        public DateTime? EstimatedDeliveryDate { get; set; }
 
         public string RecipientId { get; set; }
         public PandaUser Recipient { get; set; }
