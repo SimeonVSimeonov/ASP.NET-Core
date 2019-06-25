@@ -3,9 +3,17 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var pendingPackages = Model.Where(package => package.Status == "Pending").ToList();
-    var shippedPackages = Model.Where(package => package.Status == "Shipped").ToList();
-    var deliveredPackages = Model.Where(package => package.Status == "Delivered").ToList();
+    List<Panda.Models.ViewModels.PackageHomeViewModel> pendingPackages = null;
+    List<Panda.Models.ViewModels.PackageHomeViewModel> shippedPackages = null;
+    List<Panda.Models.ViewModels.PackageHomeViewModel> deliveredPackages = null;
+
+    if (this.User.Identity.IsAuthenticated)
+    {
+        pendingPackages = Model.Where(package => package.Status == "Pending").ToList();
+        shippedPackages = Model.Where(package => package.Status == "Shipped").ToList();
+        deliveredPackages = Model.Where(package => package.Status == "Delivered").ToList();
+    }
+
 }
 
 @if (!this.User.Identity.IsAuthenticated)

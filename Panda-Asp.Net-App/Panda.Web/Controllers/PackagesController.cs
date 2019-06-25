@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Panda.Data;
@@ -21,6 +20,7 @@ namespace Panda.Web.Controllers
             this.context = context;
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             this.ViewData["Recipients"] = this.context.Users.ToList();
@@ -29,6 +29,7 @@ namespace Panda.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(CreatePackageInputModel inputModel)
         {
             Package package = new Package
@@ -47,6 +48,7 @@ namespace Panda.Web.Controllers
         }
 
         [HttpGet("/Packages/Ship/{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Ship(string id)
         {
             Package package = this.context.Packages.Find(id);
@@ -59,6 +61,7 @@ namespace Panda.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Pending()
         {
             return this.View(context.Packages
@@ -75,6 +78,7 @@ namespace Panda.Web.Controllers
                 }).ToList());
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Shipped()
         {
             return this.View(context.Packages
@@ -93,6 +97,7 @@ namespace Panda.Web.Controllers
         }
 
         [HttpGet("/Packages/Deliver/{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Deliver(string id)
         {
             Package package = this.context.Packages.Find(id);
@@ -102,12 +107,14 @@ namespace Panda.Web.Controllers
 
             return this.Redirect("/Packages/Delivered");
         }
-        //|| package.Status.Name == "Acquire"
+        
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delivered()
         {
             return this.View(context.Packages
                 .Include(package => package.Recipient)
-                .Where(package => package.Status.Name == "Delivered")
+                .Where(package => package.Status.Name == "Delivered" || package.Status.Name == "Acquire")
                 .ToList()
                 .Select(package => new PackageDeliveredViewModel
                 {
@@ -120,6 +127,7 @@ namespace Panda.Web.Controllers
         }
 
         [HttpGet("/Packages/Details/{id}")]
+        [Authorize]
         public IActionResult Details(string id)
         {
             Package package = this.context.Packages
@@ -155,17 +163,25 @@ namespace Panda.Web.Controllers
         }
 
         [HttpGet("/Packages/Acquire/{id}")]
+        [Authorize]
         public IActionResult Acquire(string id)
         {
             Package package = this.context.Packages.Find(id);
             package.Status = this.context.StatusPackage.SingleOrDefault(status => status.Name == "Acquired");
             this.context.Update(package);
 
-            //TODO:
+            Receipt receipt = new Receipt
+            {
+                Fee = (decimal)(2.67 * package.Weight),
+                IssuedOn = DateTime.UtcNow,
+                Package = package,
+                Recipient = context.Users.SingleOrDefault(user => user.UserName == this.User.Identity.Name)
+            };
 
+            this.context.Receipts.Add(receipt);
             this.context.SaveChanges();
 
-            return this.Redirect("/Packages/Delivered");
+            return this.Redirect("/Home/Index");
         }
     }
 }
