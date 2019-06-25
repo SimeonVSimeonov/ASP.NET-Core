@@ -1,0 +1,20 @@
+﻿@model FDMC.Models.DetailsCatViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="container-fluid text-center" >
+    <h1>@Model.Name</h1>
+    <hr />
+    <br />
+    <img src="@Model.ImageUrl" alt="Smiley face" height="300" width="300">
+    <br />
+    <h2>Age: @Model.Age</h2>
+    <br />
+    <h2>Breed: @Model.Breed</h2>
+</div>
+<div>
+    @*@Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>*@
+</div>
