@@ -48,8 +48,10 @@ namespace Eventures.Areas.Identity.Pages.Account
             public bool RememberMe { get; set; }
         }
 
+
         public async Task OnGetAsync(string returnUrl = null)
         {
+
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
