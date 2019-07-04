@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Eventures.Attributes;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Eventures.Models.BindingModel
@@ -6,18 +7,23 @@ namespace Eventures.Models.BindingModel
     public class EventCreateBindingModel
     {
         [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 10)]
         [Display(Name = "Name")]
         public string Name { get; set; }
 
         [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
         [Display(Name = "Place")]
         public string Place { get; set; }
 
         [Required]
+        [DataType(DataType.Date, ErrorMessage = "Invalid Date Format")]
+        [DateGreaterThanAttribute("End")]
         [Display(Name = "Start")]
         public DateTime Start { get; set; }
 
         [Required]
+        [DataType(DataType.Date, ErrorMessage = "Invalid Date Format")]
         [Display(Name = "End")]
         public DateTime End { get; set; }
 

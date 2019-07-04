@@ -42,6 +42,8 @@ namespace Eventures.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
+            [RegularExpression(@"[a-zA-Z0-9\\~\\_\\-\\*\\ ]*", ErrorMessage = "The {0} must contain only alphanumeric characters, dashes, underscores, dots, asterisks and tildes.")]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
             [Display(Name = "Username")]
             public string Username { get; set; }
 
@@ -51,7 +53,7 @@ namespace Eventures.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 5)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
@@ -70,6 +72,8 @@ namespace Eventures.Areas.Identity.Pages.Account
             public string LastName { get; set; }
 
             [Required]
+            [RegularExpression(@"\d+", ErrorMessage = "Must contain digits only.")]
+            [StringLength(10, ErrorMessage = "Must be exactly 10 digits.", MinimumLength = 10)]
             [Display(Name = "UCN")]
             public string UCN { get; set; }
         }

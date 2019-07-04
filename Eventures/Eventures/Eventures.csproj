@@ -18,9 +18,4 @@
     <ProjectReference Include="..\Eventures.Data\Eventures.Data.csproj" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Folder Include="Attributes\" />
-  </ItemGroup>
-
 </Project>
