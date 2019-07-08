@@ -7,6 +7,7 @@ using ChatInc.Data;
 using ChatInc.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatInc.App.Controllers
 {
@@ -34,10 +35,13 @@ namespace ChatInc.App.Controllers
         [Route("create")]
         public async Task<ActionResult> Create(MessageCreateBindingModel model)
         {
+            var userFromDb = await this.context.Users
+                .SingleOrDefaultAsync(user => user.Username == model.User);
+
             Message message = new Message
             {
                 Content = model.Content,
-                User = model.User,
+                User = userFromDb,
                 CreatedOn = DateTime.UtcNow
             };
 
